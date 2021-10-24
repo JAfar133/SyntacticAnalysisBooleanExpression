@@ -15,6 +15,7 @@ public class UserService {
     Repo repo = new Repo();
     @Autowired
     LexAnalyzer lexAnalyzer;
+    List<Integer> notValidRows;
 
     public boolean addPackage(String pkg){
         if(lexAnalyzer.lexAnalyze(pkg)!=null)
@@ -176,6 +177,7 @@ public class UserService {
         else return null;
         Map<String,String> notValidOuts = new LinkedHashMap<>();
         List<String> outs = repo.getOuts();
+        notValidRows = new ArrayList<>();
         List<String> OperandAndVariableNameList = new ArrayList<>(OperandsAndVariableNames.keySet());
         int i = 1;
         for(String out: outs) {
@@ -186,6 +188,7 @@ public class UserService {
                 String outValue = row.get(numberColumnOut);
                 if(!isValid(pValue.equals("1")?true:false,outValue.equals("1")?true:false))
                 {
+                    notValidRows.add(rowsOfOperands.indexOf(row));
                     notValidOuts.put("C"+i,out);
                 }
             }
@@ -211,6 +214,12 @@ public class UserService {
         }
         return result.toString();
     }
+
+    public List<Integer> getNotValidRows() {
+        return notValidRows;
+    }
+
+
     public Repo getRepo() {
         return repo;
     }

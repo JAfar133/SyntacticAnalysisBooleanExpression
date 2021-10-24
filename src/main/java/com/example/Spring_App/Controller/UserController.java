@@ -23,13 +23,22 @@ public class UserController {
     public String main(Model model) {
         model.addAttribute("pkgList",userService.getRepo().getPackages());
         model.addAttribute("outList",userService.getRepo().getOuts());
-        List<List<String>> variableValue = userService.getListOfRowsOfOperandAndVariableValues();
-        Map<String,String> variableName = userService.getOperandsAndVariableNames();
-        model.addAttribute("variableName",variableName);
-        model.addAttribute("variableValue",variableValue);
+        List<List<String>> variableValue;
+        Map<String,String> variableName;
+        try{
+            variableValue = userService.getListOfRowsOfOperandAndVariableValues();
+            variableName = userService.getOperandsAndVariableNames();
+            model.addAttribute("variableName",variableName);
+            model.addAttribute("variableValue",variableValue);
+        }catch (RuntimeException e){
+            return "main";
+        }
         String result = userService.getResult();
         if(result!=null&&userService.getRepo().getOuts()!=null&&!userService.getRepo().getOuts().isEmpty()){
             model.addAttribute("result",result);
+            if(userService.getNotValidRows()!=null&&!userService.getNotValidRows().isEmpty()){
+                model.addAttribute("notValidRows",userService.getNotValidRows());
+            }
         }
         return "main";
     }

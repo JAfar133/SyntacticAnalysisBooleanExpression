@@ -19,7 +19,7 @@ body {
     position:relative;
     margin-left: auto;
     margin-right: auto;
-    width: 1500px;
+    width: 85%;
 }
 
 .list_panel{
@@ -82,7 +82,7 @@ input[name="delPkg"],input[name="delOut"]{
 #block-body{
     margin-bottom:50px;
     margin-left:25px;
-    max-width:800px;
+    max-width:600px;
     overflow: auto;
     text-align:center;
 }

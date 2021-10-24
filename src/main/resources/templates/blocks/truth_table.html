@@ -3,18 +3,38 @@
         <div>
             <table class="MyTab table table-bordered">
                 <thead>
+                <input type="hidden" id = "rowsList" th:value="${notValidRows}">
+
                     <tr>
                         <th style="background-color:#F4DC72;" scope="row" th:if="${variableName!=null}">#</th>
                         <th th:each="mapItem, state:${variableName}" th:text="${mapItem.key}"></th>
                     </tr>
                 </thead>
                 <div class="tbl-content" >
-                    <tbody>
+                    <tbody id="sb">
                         <tr class="tr-content" th:each="list,state:${variableValue}">
-                            <td style="background-color:#F4DC72;" th:text="${state.count-1}"></td>
-                            <td th:each="value:${list}"th:text="${value}"></td>
+                            <td class="count" style="background-color:#F4DC72 !important;" th:text="${state.count-1}"></td>
+                            <td class="values" th:each="value:${list}"th:text="${value}"></td>
                         </tr>
                     </tbody>
+                    <script th:inline="javascript">
+                        var list = /*[[${notValidRows}]]*/ [];
+                        var outs =/*[[${notValidOutList}]]*/ [];
+                        console.log(list);
+                        var table = document.querySelectorAll('#sb tr')
+                        table.forEach((tr)=>{
+                            if(tr.className="count"){
+                                var count = tr.querySelector(".count");
+                                var countContent = count.textContent;
+                                for(var i = 0;i<list.length;i++){
+                                    if(list[i]==countContent){
+                                        tr.style.background="#EDEDED";
+                                        console.log(countContent);
+                                    }
+                                }
+                            }
+                        });
+                    </script>
                 </div>
             </table>
         </div>

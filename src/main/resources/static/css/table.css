@@ -12,9 +12,7 @@ table {
     border-collapse: collapse;
     margin-bottom:50px;
 }
-.tbl-content{
-    overflow-x:auto;
-}
+
 th,
 td {
     border: #ccc 1px solid;
