@@ -1,0 +1,115 @@
+
+*, *::after, *::before {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+#page-layout{
+    padding-top:100px;
+    display:flex;
+    position:relative;
+    margin-left: auto;
+    margin-right: auto;
+    width: 1500px;
+}
+
+.list_panel{
+    margin-left:30px;
+    display:flex;
+    flex-direction: column;
+}
+#list{
+    border-radius:10px 10px 24px 24px;
+    width:600px;
+    height:500px;
+    background:#f6f6f6;
+    display:block;
+}
+#info{
+    width:600px;
+    border: 1px solid #DBDBDB;
+    border-bottom:none;
+    border-radius:24px 24px 0 0;
+    display:flex;
+    padding-top:10px;
+    padding-bottom:10px;
+
+}
+#pkg_span{
+    margin-left:115px;
+}
+#out_span{
+    margin-left:240px;
+}
+#list #package{
+    width:300px;
+    height:500px;
+    float:left;
+    display:flex;
+    border-right:1px solid #DBDBDB;
+}
+li{
+    list-style-type: none;
+}
+#list #out{
+    border-left:1px solid #DBDBDB;
+    width:300px;
+    height:500px;
+    float:right;
+    display:flex;
+
+}
+.span{
+    display:inline-block;
+    width:164px;
+}
+input[name="delPkg"],input[name="delOut"]{
+    width:63px !important;
+}
+#block-body{
+    margin-bottom:50px;
+    margin-left:50px;
+    max-width:800px;
+    overflow: auto;
+    text-align:center;
+}
+.panel{
+    display:block;
+    padding-top:200px;
+    padding:10px;
+    margin-left:-10px;
+}
+
+input{
+    width:298px;
+    height:30px;
+}
+input[type="submit"]{
+    width:600px;
+    float:center;
+    margin-top:10px;
+    cursor:pointer;
+}
+footer{
+    box-shadow: 0 0 15px rgba(0,0,0,0.6);
+    text-align:center;
+    float: left;
+    display:block;
+    width:100%;
+    height: 30px;
+    padding: 0;
+    z-index:100;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}

@@ -1,0 +1,27 @@
+<div th:fragment="list" id="list">
+    <form action="/delete">
+        <div id="package">
+            <ul>
+                <li th:each="el,state:${pkgList}" >
+                    <div class ="span">
+                        <span th:text="${'P' +state.count + '= '+el}"></span>
+                    </div>
+                    <input name="delPkg" type="submit" th:value="${'Удалить '+el}"/>
+                </li>
+
+            </ul>
+        </div>
+
+        <div id="out">
+            <ul>
+                <li th:each="el,state:${outList}">
+                    <div class ="span">
+                        <span th:text="${'C' +state.count + '= '+el}"></span>
+                    </div>
+                    <input name="delOut" type="submit" th:value="${'Удалить '+el}"/>
+                </li>
+            </ul>
+        </div>
+    </form>
+</div>
+

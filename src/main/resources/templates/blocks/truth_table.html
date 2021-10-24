@@ -1,0 +1,22 @@
+<div th:fragment="truth_table">
+    <div class="main-table" id="main-table">
+        <div>
+            <table class="MyTab table table-bordered">
+                <thead>
+                    <tr>
+                        <th style="background-color:#F4DC72;" scope="row" th:if="${variableName!=null}">#</th>
+                        <th th:each="mapItem, state:${variableName}" th:text="${mapItem.key}"></th>
+                    </tr>
+                </thead>
+                <div class="tbl-content" >
+                    <tbody>
+                        <tr class="tr-content" th:each="list,state:${variableValue}">
+                            <td style="background-color:#F4DC72;" th:text="${state.count}"></td>
+                            <td th:each="value:${list}"th:text="${value}"></td>
+                        </tr>
+                    </tbody>
+                </div>
+            </table>
+        </div>
+    </div>
+</div>
