@@ -11,7 +11,7 @@
                 <div class="tbl-content" >
                     <tbody>
                         <tr class="tr-content" th:each="list,state:${variableValue}">
-                            <td style="background-color:#F4DC72;" th:text="${state.count}"></td>
+                            <td style="background-color:#F4DC72;" th:text="${state.count-1}"></td>
                             <td th:each="value:${list}"th:text="${value}"></td>
                         </tr>
                     </tbody>
