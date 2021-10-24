@@ -214,7 +214,11 @@ public class UserService {
         }
         return result.toString();
     }
-
+    public int getPosP(){
+        Map<String,String> OperandsAndVariableNames = getOperandsAndVariableNames();
+        List<String> keyList = new ArrayList<>(OperandsAndVariableNames.keySet());
+        return keyList.indexOf("P");
+    }
     public List<Integer> getNotValidRows() {
         return notValidRows;
     }

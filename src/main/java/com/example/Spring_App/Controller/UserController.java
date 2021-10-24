@@ -30,6 +30,7 @@ public class UserController {
             variableName = userService.getOperandsAndVariableNames();
             model.addAttribute("variableName",variableName);
             model.addAttribute("variableValue",variableValue);
+            model.addAttribute("posP",userService.getPosP());
         }catch (RuntimeException e){
             return "main";
         }
@@ -40,6 +41,7 @@ public class UserController {
                 model.addAttribute("notValidRows",userService.getNotValidRows());
             }
         }
+
         return "main";
     }
     @GetMapping("/get")
