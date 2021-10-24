@@ -207,7 +207,7 @@ public class UserService {
                 }
                 else result.append(" ");
             }
-            result.append(num>1?"валидные":"валидный");
+            result.append(num>1?"не валидные":"не валидный");
         }
         return result.toString();
     }
