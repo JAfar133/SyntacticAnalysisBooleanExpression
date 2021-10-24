@@ -27,6 +27,10 @@ public class UserController {
         Map<String,String> variableName = userService.getOperandsAndVariableNames();
         model.addAttribute("variableName",variableName);
         model.addAttribute("variableValue",variableValue);
+        String result = userService.getResult();
+        if(result!=null&&userService.getRepo().getOuts()!=null&&!userService.getRepo().getOuts().isEmpty()){
+            model.addAttribute("result",result);
+        }
         return "main";
     }
     @GetMapping("/get")

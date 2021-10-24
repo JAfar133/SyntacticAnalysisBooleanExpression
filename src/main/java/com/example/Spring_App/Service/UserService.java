@@ -167,7 +167,50 @@ public class UserService {
         }
         else return true;
     }
-
+    public String getResult(){
+        List<List<String>> rowsOfOperands = getListOfRowsOfOperandAndVariableValues();
+        Map<String,String> OperandsAndVariableNames;
+        if(rowsOfOperands!=null){
+            OperandsAndVariableNames = getOperandsAndVariableNames();
+        }
+        else return null;
+        Map<String,String> notValidOuts = new LinkedHashMap<>();
+        List<String> outs = repo.getOuts();
+        List<String> OperandAndVariableNameList = new ArrayList<>(OperandsAndVariableNames.keySet());
+        int i = 1;
+        for(String out: outs) {
+            for (List<String> row : rowsOfOperands) {
+                int numberColumnP = OperandAndVariableNameList.indexOf("P");
+                String pValue = row.get(numberColumnP);
+                int numberColumnOut = OperandAndVariableNameList.indexOf("C"+i);
+                String outValue = row.get(numberColumnOut);
+                if(!isValid(pValue.equals("1")?true:false,outValue.equals("1")?true:false))
+                {
+                    notValidOuts.put("C"+i,out);
+                }
+            }
+            i++;
+        }
+        StringBuilder result = new StringBuilder();
+        if(notValidOuts.isEmpty()){
+            return "Все выводы валидные";
+        }
+        else {
+            int num = notValidOuts.size();
+            result.append(num>1?"Выводы: ":"Вывод: ");
+            int n = 0;
+            for (Map.Entry<String,String> pair: notValidOuts.entrySet()){
+                n++;
+                result.append(pair.getKey()).append("= ").append(pair.getValue());
+                if(n<num){
+                    result.append(", ");
+                }
+                else result.append(" ");
+            }
+            result.append(num>1?"валидные":"валидный");
+        }
+        return result.toString();
+    }
     public Repo getRepo() {
         return repo;
     }
