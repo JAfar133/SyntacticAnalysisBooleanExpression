@@ -19,7 +19,7 @@ body {
     position:relative;
     margin-left: auto;
     margin-right: auto;
-    width: 97%;
+    width: 98%;
     margin-bottom:60px;
 }
 
@@ -32,7 +32,6 @@ body {
     width:600px;
     height:500px;
     background:#f6f6f6;
-    display:block;
 }
 #info{
     width:600px;
@@ -81,22 +80,24 @@ input[name="delPkg"],input[name="delOut"]{
     width:63px !important;
 }
 #block-body{
+    display:flex;
     margin-bottom:50px;
     margin-left:25px;
-    max-width:600px;
-    overflow: auto;
     text-align:center;
 }
 .panel{
-    display:block;
+    display:flex;
     padding-top:200px;
     padding:10px;
     margin-left:-10px;
+    flex-direction: column;
 }
-
+.text{
+    display:flex;
+    justify-content: space-between;
+}
 input{
-    width:298px;
-    height:30px;
+width:297px;
 }
 input[type="submit"]{
     width:600px;
