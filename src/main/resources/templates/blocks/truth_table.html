@@ -13,7 +13,7 @@
                 <div class="tbl-content" >
                     <tbody id="sb">
                         <tr class="tr-content" th:each="list,state:${variableValue}">
-                            <td class="count" style="background-color:#F4DC72 !important;" th:text="${state.count-1}"></td>
+                            <td class="count values" style="background-color:#F4DC72 !important;" th:text="${state.count-1}"></td>
                             <td class="values" th:each="value:${list}"th:text="${value}"></td>
                         </tr>
                     </tbody>
@@ -49,7 +49,7 @@
                         table.forEach((tr)=>{
                             var value = tr.querySelectorAll(".values");
                             var valueContent = value.textContent;
-                            var n = 0;
+                            var n = -1;
                             value.forEach((td)=>{
                                 if(n==pName){
                                     td.style.background="#F0A97D";

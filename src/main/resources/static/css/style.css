@@ -14,27 +14,27 @@ body {
     padding: 0;
 }
 #page-layout{
-    padding-top:100px;
+    padding-top:2vh;
     display:flex;
     position:relative;
     margin-left: auto;
     margin-right: auto;
-    width: 98%;
+    width: min(98vw,2000px);
     margin-bottom:60px;
 }
 
 .list_panel{
-    margin-left:30px;
+    margin-left:min(3vw,30px);
     display:flex;
-    width:602px;
+    width:min(40vw,602px);
     flex-direction: column;
 }
 #list{
-    height:500px;
+    height:min(70vh,700px);
     background:#f6f6f6;
 }
 #info{
-    width:602px;
+    width:min(40vw,602px);
     border: 1px solid #DBDBDB;
     border-bottom:none;
     border-radius:6px 6px 0 0;
@@ -44,34 +44,35 @@ body {
 
 }
 .help{
-    height:250px;
+    margin-left:min(1.5vw,15px);
+    height:min(30vh,250px);
 }
 
 
 #pkg_span{
-    margin-left:115px;
+    margin-left:min(9vw,115px);
 }
 #out_span{
-    margin-left:240px;
+    margin-left:min(16vw,240px);
 }
 #list #package{
     position:relative;
-    width:300px;
-    height:500px;
+    width:min(20vw,301px);
+    height:min(70vh,700px);
     float:left;
     display:flex;
-    border-right:1px solid #DBDBDB;
     overflow:auto;
 }
 li{
+    margin-bottom:5px;
     height:40px;
     list-style-type: none;
 }
 #list #out{
     position:relative;
     border-left:1px solid #DBDBDB;
-    width:302px;
-    height:500px;
+    width:min(20vw,301px);
+    height:min(70vh,700px);
     float:right;
     display:flex;
     overflow:auto;
@@ -79,10 +80,10 @@ li{
 }
 .span{
     display:inline-block;
-    width:164px;
+    width:min(13vw,150px);;
 }
 input[name="delPkg"],input[name="delOut"]{
-    width:63px !important;
+    width:65px !important;
 }
 
 .down{
@@ -98,9 +99,9 @@ input[name="delPkg"],input[name="delOut"]{
     margin-left:2px;
 }
 #block-body{
+    padding-right:2vh;
     display:flex;
-    margin-bottom:50px;
-    margin-left:25px;
+    margin-left:min(3vw,30px);
     text-align:center;
 }
 .panel{
@@ -111,15 +112,18 @@ input[name="delPkg"],input[name="delOut"]{
     flex-direction: column;
 }
 .text{
-    width:602px;
+    width:min(40vw,602px);
     display:flex;
     justify-content: space-between;
 }
 input{
-    width:298px;
+    width:min(19.9vw,298px);
+}
+.panel input{
+    height:min(3.5vh,30px);
 }
 input[type="submit"]{
-    width:602px;
+    width:min(40vw,602px);
     float:center;
     margin-top:10px;
     cursor:pointer;

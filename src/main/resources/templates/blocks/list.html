@@ -21,7 +21,7 @@
                     <div class ="span">
                         <span th:text="${'C' +state.count + '= '+el}"></span>
                     </div>
-                    <input name="delOut" type="submit" th:value="${'Удалить '+el}"/>
+                    <input name="delOut" type="submit" th:value="${'Удалить &#160 &#160'+el}"/>
                 </li>
                 <div class="down">
                     <input th:if="${outList!=null and outList.size()>1}"type="submit" name="del_outs" value="Удалить все выводы">

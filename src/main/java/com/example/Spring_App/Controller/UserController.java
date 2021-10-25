@@ -66,12 +66,12 @@ public class UserController {
         String delAllOut = request.getParameter("del_outs");
         String delete;
         if(delOut!=null){
-            delete = delOut.split("Удалить ")[1];
+            delete = delOut.split("Удалить")[1].trim();
             userService.delOut(delete);
             System.out.println(delete);
         }
         else if(delPkg!=null){
-            delete = delPkg.split("Удалить ")[1];
+            delete = delPkg.split("Удалить")[1].trim();
             userService.delPackage(delete);
         }
         else if(delALLPkg!=null){
