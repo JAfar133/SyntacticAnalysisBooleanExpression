@@ -86,10 +86,10 @@ input[name="delPkg"],input[name="delOut"]{
 .down{
     display:flex;
     position:relative;
-    margin-top:20px;
+    margin-top:40px;
 }
 .down input{
-    width:160px !important;
+    width:232px !important;
 }
 
 .down input[name="del_outs"]{
