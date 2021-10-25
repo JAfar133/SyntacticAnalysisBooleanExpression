@@ -62,6 +62,8 @@ public class UserController {
     public String delete(HttpServletRequest request,Model model){
         String delOut = request.getParameter("delOut");
         String delPkg = request.getParameter("delPkg");
+        String delALLPkg = request.getParameter("del_pkgs");
+        String delAllOut = request.getParameter("del_outs");
         String delete;
         if(delOut!=null){
             delete = delOut.split("Удалить ")[1];
@@ -71,6 +73,12 @@ public class UserController {
         else if(delPkg!=null){
             delete = delPkg.split("Удалить ")[1];
             userService.delPackage(delete);
+        }
+        else if(delALLPkg!=null){
+            userService.delAllPkg();
+        }
+        else if(delAllOut!=null){
+            userService.delAllOut();
         }
         return "redirect:/";
     }

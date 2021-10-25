@@ -55,6 +55,7 @@ body {
     margin-left:240px;
 }
 #list #package{
+    position:relative;
     width:300px;
     height:500px;
     float:left;
@@ -62,9 +63,11 @@ body {
     border-right:1px solid #DBDBDB;
 }
 li{
+    height:40px;
     list-style-type: none;
 }
 #list #out{
+    position:relative;
     border-left:1px solid #DBDBDB;
     width:300px;
     height:500px;
@@ -78,6 +81,19 @@ li{
 }
 input[name="delPkg"],input[name="delOut"]{
     width:63px !important;
+}
+
+.down{
+    display:flex;
+    position:relative;
+    margin-top:20px;
+}
+.down input{
+    width:160px !important;
+}
+
+.down input[name="del_outs"]{
+    margin-left:2px;
 }
 #block-body{
     display:flex;
@@ -97,6 +113,7 @@ input[name="delPkg"],input[name="delOut"]{
     justify-content: space-between;
 }
 input{
+
 width:297px;
 }
 input[type="submit"]{

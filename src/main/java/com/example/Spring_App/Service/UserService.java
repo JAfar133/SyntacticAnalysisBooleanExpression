@@ -33,6 +33,14 @@ public class UserService {
     public boolean delOut(String out){
         return repo.delOut(out);
     }
+
+    public boolean delAllPkg(){
+        return repo.dellAllPkg();
+    }
+    public boolean delAllOut(){
+        return repo.dellAllOut();
+    }
+
     public Map<String,String> getOperandsName(){
         StringBuilder sb = new StringBuilder();
         Map<String,String> operandMap = new TreeMap<>();
@@ -219,6 +227,7 @@ public class UserService {
         List<String> keyList = new ArrayList<>(OperandsAndVariableNames.keySet());
         return keyList.indexOf("P");
     }
+
     public List<Integer> getNotValidRows() {
         return notValidRows;
     }

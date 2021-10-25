@@ -35,6 +35,16 @@ public class Repo {
         if(outs.remove(out)) return true;
         else return false;
     }
+    public boolean dellAllPkg(){
+        if(!packages.isEmpty())
+            return packages.removeAll(packages);
+        else return false;
+    }
+    public boolean dellAllOut(){
+        if(!outs.isEmpty())
+            return outs.removeAll(outs);
+        else return false;
+    }
 
     public List<String> getPackages() {
         return packages;

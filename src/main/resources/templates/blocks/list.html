@@ -8,8 +8,11 @@
                     </div>
                     <input name="delPkg" type="submit" th:value="${'Удалить '+el}"/>
                 </li>
-
+                <div class="down">
+                    <input th:if="${pkgList!=null and !pkgList.empty}"type="submit" name="del_pkgs" value="Удалить все посылки">
+                </div>
             </ul>
+
         </div>
 
         <div id="out">
@@ -20,8 +23,13 @@
                     </div>
                     <input name="delOut" type="submit" th:value="${'Удалить '+el}"/>
                 </li>
+                <div class="down">
+                    <input th:if="${outList!=null and !outList.empty}"type="submit" name="del_outs" value="Удалить все выводы">
+                </div>
             </ul>
+
         </div>
+
     </form>
 </div>
 
