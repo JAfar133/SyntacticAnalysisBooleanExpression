@@ -2,30 +2,44 @@
     <form action="/delete">
         <div id="package">
             <ul>
-                <li th:each="el,state:${pkgList}" >
-                    <div class ="span">
-                        <span th:text="${'P' +state.count + '= '+el}"></span>
+                <div class="li">
+                    <li th:each="el,state:${pkgList}" >
+                        <div class="li-one">
+                            <div class ="span">
+                                <span th:text="${'P' +state.count + '= '+el}"></span>
+                            </div>
+                            <div class="del-right">
+                                <input name="delPkg" type="submit" th:value="${'Удалить '+el}"/>
+                            </div>
+                        </div>
+                    </li>
+                    <div class="down">
+                        <input th:if="${pkgList!=null and pkgList.size()>1}"type="submit" name="del_pkgs" value="Удалить все посылки">
                     </div>
-                    <input name="delPkg" type="submit" th:value="${'Удалить '+el}"/>
-                </li>
-                <div class="down">
-                    <input th:if="${pkgList!=null and pkgList.size()>1}"type="submit" name="del_pkgs" value="Удалить все посылки">
                 </div>
+
             </ul>
 
         </div>
 
         <div id="out">
             <ul>
-                <li th:each="el,state:${outList}">
-                    <div class ="span">
-                        <span th:text="${'C' +state.count + '= '+el}"></span>
+                <div class="li">
+                    <li th:each="el,state:${outList}">
+                        <div class="li-one">
+                            <div class ="span">
+                                <span th:text="${'C' +state.count + '= '+el}"></span>
+                            </div>
+                            <div class="del-right">
+                                <input name="delOut" type="submit" th:value="${'Удалить '+el}"/>
+                            </div>
+                        </div>
+                    </li>
+                    <div class="down">
+                        <input th:if="${outList!=null and outList.size()>1}"type="submit" name="del_outs" value="Удалить все выводы">
                     </div>
-                    <input name="delOut" type="submit" th:value="${'Удалить &#160 &#160'+el}"/>
-                </li>
-                <div class="down">
-                    <input th:if="${outList!=null and outList.size()>1}"type="submit" name="del_outs" value="Удалить все выводы">
                 </div>
+
             </ul>
 
         </div>

@@ -53,7 +53,7 @@ body {
     margin-left:min(9vw,115px);
 }
 #out_span{
-    margin-left:min(16vw,240px);
+    margin-left:min(15.5vw,230px);
 }
 #list #package{
     position:relative;
@@ -63,11 +63,7 @@ body {
     display:flex;
     overflow:auto;
 }
-li{
-    margin-bottom:5px;
-    height:40px;
-    list-style-type: none;
-}
+
 #list #out{
     position:relative;
     border-left:1px solid #DBDBDB;
@@ -79,20 +75,35 @@ li{
 
 }
 .span{
-    display:inline-block;
-    width:min(13vw,150px);;
+    margin-top:13px;
+    width:min(10.5vw,165px) !important;
+    display:flex;
 }
 input[name="delPkg"],input[name="delOut"]{
-    width:65px !important;
+    height:30px;
+    width:min(65px,5vw) !important;
 }
+.li{
+    width:min(15.5vw,232px);
+    margin-bottom:5px;
+    list-style-type: none;
 
+}
+.li-one{
+    justify-content: space-between;
+    display:flex;
+}
+.del-right{
+    display:flex;
+    float:right;
+}
 .down{
     display:flex;
     position:relative;
     margin-top:40px;
 }
 .down input{
-    width:232px !important;
+    width:min(15.5vw,232px) !important;
 }
 
 .down input[name="del_outs"]{
@@ -120,10 +131,11 @@ input{
     width:min(19.9vw,298px);
 }
 .panel input{
-    height:min(3.5vh,30px);
+    height:min(4vh,30px);
 }
 input[type="submit"]{
     width:min(40vw,602px);
+
     float:center;
     margin-top:10px;
     cursor:pointer;
