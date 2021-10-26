@@ -130,9 +130,7 @@ input[name="delPkg"],input[name="delOut"]{
 input{
     width:min(19.9vw,298px);
 }
-.panel input{
-    height:min(4vh,30px);
-}
+
 input[type="submit"]{
     width:min(40vw,602px);
 

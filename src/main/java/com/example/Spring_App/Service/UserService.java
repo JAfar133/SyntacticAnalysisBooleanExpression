@@ -73,7 +73,7 @@ public class UserService {
                 OperandsAndVariableNames.put("P"+i,pkg);
                         i++;
             }
-            OperandsAndVariableNames.put("P","ConP");
+            OperandsAndVariableNames.put("<P>","ConP");
         }
         if(repo.getOuts()!=null){
             int i = 1;
@@ -190,7 +190,7 @@ public class UserService {
         int i = 1;
         for(String out: outs) {
             for (List<String> row : rowsOfOperands) {
-                int numberColumnP = OperandAndVariableNameList.indexOf("P");
+                int numberColumnP = OperandAndVariableNameList.indexOf("<P>");
                 String pValue = row.get(numberColumnP);
                 int numberColumnOut = OperandAndVariableNameList.indexOf("C"+i);
                 String outValue = row.get(numberColumnOut);
@@ -225,7 +225,7 @@ public class UserService {
     public int getPosP(){
         Map<String,String> OperandsAndVariableNames = getOperandsAndVariableNames();
         List<String> keyList = new ArrayList<>(OperandsAndVariableNames.keySet());
-        return keyList.indexOf("P");
+        return keyList.indexOf("<P>");
     }
 
     public List<Integer> getNotValidRows() {
