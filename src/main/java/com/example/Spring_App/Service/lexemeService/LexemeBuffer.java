@@ -7,6 +7,7 @@ public class LexemeBuffer {
     public List<Lexeme> lexemes;
 
     public LexemeBuffer(List<Lexeme> lexemes) {
+        pos=0;
         this.lexemes = lexemes;
     }
     public Lexeme next(){

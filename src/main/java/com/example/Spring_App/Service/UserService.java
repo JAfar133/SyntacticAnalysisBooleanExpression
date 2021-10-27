@@ -18,13 +18,23 @@ public class UserService {
     List<Integer> notValidRows;
 
     public boolean addPackage(String pkg){
-        if(lexAnalyzer.lexAnalyze(pkg)!=null)
-            return repo.addPkg(pkg);
+        if(lexAnalyzer.lexAnalyze(pkg)!=null) {
+            StringBuilder new_pkg = new StringBuilder();
+            for (Lexeme lexeme : lexAnalyzer.getLexemes()) {
+                new_pkg.append(lexeme.getValue());
+            }
+            return repo.addPkg(new_pkg.toString());
+        }
         else return false;
     }
     public boolean addOut(String out){
-        if(lexAnalyzer.lexAnalyze(out)!=null)
-            return repo.addOut(out);
+        if(lexAnalyzer.lexAnalyze(out)!=null) {
+            StringBuilder new_out = new StringBuilder();
+            for (Lexeme lexeme : lexAnalyzer.getLexemes()) {
+                new_out.append(lexeme.getValue());
+            }
+            return repo.addOut(new_out.toString());
+        }
         else return false;
     }
     public boolean delPackage(String pkg){

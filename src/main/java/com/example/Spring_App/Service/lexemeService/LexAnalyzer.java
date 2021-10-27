@@ -28,31 +28,67 @@ public class LexAnalyzer {
                     pos++;
                     continue;
                 case '+':
-                case 'v':
-                case 'V':
-                case '|':
-                    lexemes.add(new Lexeme(LexemeType.OP_OR,c));
+                case '⋁':
+                    lexemes.add(new Lexeme(LexemeType.OP_OR,'⋁'));
                     pos++;
                     continue;
                 case '*':
                 case '&':
-                    lexemes.add(new Lexeme(LexemeType.OP_AND,c));
+                case '∧':
+                    lexemes.add(new Lexeme(LexemeType.OP_AND,'∧'));
                     pos++;
                     continue;
                 case '!':
-                    lexemes.add(new Lexeme(LexemeType.OP_NOT,c));
+                case '¬':
+                    lexemes.add(new Lexeme(LexemeType.OP_NOT,'¬'));
+                    pos++;
+                    continue;
+                case '|':
+                    lexemes.add(new Lexeme(LexemeType.OP_SCHAEFFER,c));
+                    pos++;
+                    continue;
+                case '#':
+                case '↓':
+                    lexemes.add(new Lexeme(LexemeType.OP_PIERS,'↓'));
+                    pos++;
+                    continue;
+                case '^':
+                case '⊕':
+                    lexemes.add(new Lexeme(LexemeType.OP_XOR,'⊕'));
+                    pos++;
+                    continue;
+                case '<':
+                case '%':
+                case '←':
+                    int currPos = pos;
+                    if(c=='←'||c=='%'){
+                        lexemes.add(new Lexeme(LexemeType.OP_REVERSE_IMP,'←'));
+                        pos++;
+                        continue;
+                    }
+                    else if(expText.charAt(++currPos)=='-'){
+                        lexemes.add(new Lexeme(LexemeType.OP_REVERSE_IMP,'←'));
+                        pos+=2;
+                        continue;
+                    }
+                    else return null;
+
+                case '=':
+                case '≡':
+                    lexemes.add(new Lexeme(LexemeType.OP_EQUAL,'≡'));
                     pos++;
                     continue;
                 case '@':
-                    lexemes.add(new Lexeme(LexemeType.OP_IMP,c));
-                    pos++;
-                    continue;
                 case '-':
-                    int currPos = pos;
-                    if(expText.charAt(++currPos)=='>'){
-                        StringBuilder sb = new StringBuilder();
-                        sb.append(c).append('>');
-                        lexemes.add(new Lexeme(LexemeType.OP_IMP,sb.toString()));
+                case '→':
+                    int currPos1 = pos;
+                    if(c=='→'||c=='@'){
+                        lexemes.add(new Lexeme(LexemeType.OP_IMP,'→'));
+                        pos++;
+                        continue;
+                    }
+                    else if(expText.charAt(++currPos1)=='>'){
+                        lexemes.add(new Lexeme(LexemeType.OP_IMP,'→'));
                         pos+=2;
                         continue;
                     }
@@ -60,9 +96,9 @@ public class LexAnalyzer {
                 default:
                     //Таблица ASCII для больших и маленьких букв
                     if(c>=97&&c<=122||c>=65&&c<=90){
-                        int currPos1 = pos;
-                        if(++currPos1<expText.length()){
-                            char c1 = expText.charAt(currPos1);
+                        int currPos2 = pos;
+                        if(++currPos2<expText.length()){
+                            char c1 = expText.charAt(currPos2);
                             if(c1>=97&&c1<=122||c1>=65&&c1<=90){
                                 return null;
                             }
@@ -94,11 +130,26 @@ public class LexAnalyzer {
         Lexeme lexeme = lexemeBuffer.next();
         if(lexeme.getType()!=LexemeType.EOF){
             lexemeBuffer.back();
-            return Impl(lexemeBuffer);
+            return Equal(lexemeBuffer);
         }
         else return false;
     }
-    public boolean Impl(LexemeBuffer lexemeBuffer){
+    public boolean Equal(LexemeBuffer lexemeBuffer){
+        boolean value = Imp(lexemeBuffer);
+        while (true){
+            Lexeme lexeme = lexemeBuffer.next();
+            switch (lexeme.getType()){
+                case OP_EQUAL:
+                    boolean value1 = Imp(lexemeBuffer);
+                    value = value == value1;
+                    break;
+                default:
+                    lexemeBuffer.back();
+                    return value;
+            }
+        }
+    }
+    public boolean Imp(LexemeBuffer lexemeBuffer){
         boolean value = Or(lexemeBuffer);
         while (true){
             Lexeme lexeme = lexemeBuffer.next();
@@ -106,6 +157,10 @@ public class LexAnalyzer {
                 case OP_IMP:
                     boolean value1 = Or(lexemeBuffer);
                     value = !value || value1;
+                    break;
+                case OP_REVERSE_IMP:
+                    boolean value2 = Or(lexemeBuffer);
+                    value = value || !value2;
                     break;
                 default:
                     lexemeBuffer.back();
@@ -122,6 +177,10 @@ public class LexAnalyzer {
                     boolean value1 = And(lexemeBuffer);
                     value = value || value1;
                     break;
+                case OP_XOR:
+                    boolean value2 = And(lexemeBuffer);
+                    value = (!value||!value2)&&(value||value2);
+                    break;
                 default:
                     lexemeBuffer.back();
                     return value;
@@ -129,13 +188,43 @@ public class LexAnalyzer {
         }
     }
     public boolean And(LexemeBuffer lexemeBuffer){
-        boolean value = Operand(lexemeBuffer);
+        boolean value = Piers(lexemeBuffer);
         while (true){
             Lexeme lexeme = lexemeBuffer.next();
             switch (lexeme.getType()){
                 case OP_AND:
-                    boolean value1=Operand(lexemeBuffer);
+                    boolean value1=Piers(lexemeBuffer);
                     value = value && value1;
+                    break;
+                default:
+                    lexemeBuffer.back();
+                    return value;
+            }
+        }
+    }
+    public boolean Piers(LexemeBuffer lexemeBuffer){
+        boolean value = Schaeffer(lexemeBuffer);
+        while (true){
+            Lexeme lexeme = lexemeBuffer.next();
+            switch (lexeme.getType()){
+                case OP_PIERS:
+                    boolean value1=Schaeffer(lexemeBuffer);
+                    value = !(value||value1);
+                    break;
+                default:
+                    lexemeBuffer.back();
+                    return value;
+            }
+        }
+    }
+    public boolean Schaeffer(LexemeBuffer lexemeBuffer){
+        boolean value = Operand(lexemeBuffer);
+        while (true){
+            Lexeme lexeme = lexemeBuffer.next();
+            switch (lexeme.getType()){
+                case OP_SCHAEFFER:
+                    boolean value1=Operand(lexemeBuffer);
+                    value = !(value&&value1);
                     break;
                 default:
                     lexemeBuffer.back();
@@ -167,6 +256,7 @@ public class LexAnalyzer {
                         "at position: " +lexemeBuffer.getPos());
         }
     }
+
 
     public List<Lexeme> getLexemes() {
         return lexemes;
