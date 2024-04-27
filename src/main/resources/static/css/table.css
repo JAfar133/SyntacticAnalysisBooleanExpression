@@ -2,7 +2,7 @@
     text-align:center;
     margin-bottom:50px;
     height:min(90vh,900px);
-    width:min(31vw,1000px);
+    width:100%;
     overflow: auto;
 }
 thead{

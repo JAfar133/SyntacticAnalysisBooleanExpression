@@ -2,7 +2,7 @@
     <div class="help">
         <table class="help_tab table table-bordered">
             <tr>
-                <th>Клавиша</th>
+                <th>Символ</th>
                 <th>Оператор</th>
                 <th>Описание</th>
             </tr>
@@ -23,12 +23,12 @@
             </tr>
             <tr>
                 <td>*, &</td>
-                <td>&</td>
+                <td>&and;</td>
                 <td>Конъюнкция (И)</td>
             </tr>
             <tr>
                 <td>+</td>
-                <td>v</td>
+                <td>&or;</td>
                 <td>Дизъюнкция (ИЛИ)</td>
             </tr>
             <tr>
@@ -51,6 +51,12 @@
                 <td>≡ (~, ↔)</td>
                 <td>Эквивалентность (РАВНО)</td>
             </tr>
+	        
         </table>
+	    <div style="width: 100%;background: #f6f6f6;border: 1px solid #dee2e6;padding: 5px;">
+		    <span style="width: 100%">&lt;P&gt; - Коньюнкция посылок</span><br/>
+		    <span style="width: 100%">Вывод C<small>i</small> считается валидным, если не существует строки &lt;P&gt;&and;C<small>i</small> = true </span>
+	    </div>
+	    
     </div>
 </div>

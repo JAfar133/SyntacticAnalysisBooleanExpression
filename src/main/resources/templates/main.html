@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width">
     <title>Title</title>
     <link rel="stylesheet" type="text/css" th:href="@{styles/css/style.css}"/>
     <link rel="stylesheet" type="text/css" th:href="@{styles/css/table.css}"/>
@@ -10,7 +11,7 @@
 </head>
 <body>
     <div id="page-layout">
-        <div th:insert="blocks/help_table::help_table"></div>
+        <div class="help_panel" th:insert="blocks/help_table::help_table"></div>
         <div class="list_panel">
             <div id="info">
                 <span id="pkg_span">Посылки</span>
@@ -33,7 +34,7 @@
             </div>
         </div>
         <div id="block-body">
-            <div th:insert="blocks/truth_table :: truth_table"></div>
+            <th:block th:insert="blocks/truth_table :: truth_table"></th:block>
         </div>
     </div>
     <footer class="bg-light text-center text-lg-start">

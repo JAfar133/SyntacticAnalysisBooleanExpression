@@ -1,12 +1,11 @@
 
 *, *::after, *::before {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -o-box-sizing: border-box;
-    -ms-box-sizing: border-box;
-    box-sizing: border-box;
     margin: 0;
     padding: 0;
+}
+#out ul, #package ul {
+    padding-left: 0 !important;
+    width: 100%;
 }
 html,
 body {
@@ -14,77 +13,68 @@ body {
     padding: 0;
 }
 #page-layout{
-    padding-top:2vh;
     display:flex;
     position:relative;
     margin-left: auto;
     margin-right: auto;
-    width: min(98vw,2000px);
     margin-bottom:60px;
+    padding: 1rem;
+    gap: 10px;
+    justify-content: center;
 }
 
 .list_panel{
-    margin-left:min(3vw,30px);
     display:flex;
-    width:min(40vw,602px);
     flex-direction: column;
+    min-width: 40%;
 }
 #list{
     height:min(70vh,700px);
     background:#f6f6f6;
 }
+#list form {
+    display: flex;
+}
 #info{
-    width:min(40vw,602px);
     border: 1px solid #DBDBDB;
     border-bottom:none;
     border-radius:6px 6px 0 0;
     display:flex;
     padding-top:10px;
     padding-bottom:10px;
-
-}
-.help{
-    margin-left:min(1.5vw,15px);
-    height:min(30vh,250px);
+    justify-content: space-around;
 }
 
 
-#pkg_span{
-    margin-left:min(9vw,115px);
-}
-#out_span{
-    margin-left:min(15.5vw,230px);
-}
 #list #package{
     position:relative;
-    width:min(20vw,301px);
     height:min(70vh,700px);
     float:left;
     display:flex;
     overflow:auto;
+    padding: 4px;
+    width: 50%;
 }
 
 #list #out{
     position:relative;
     border-left:1px solid #DBDBDB;
-    width:min(20vw,301px);
     height:min(70vh,700px);
     float:right;
     display:flex;
     overflow:auto;
+    padding: 4px;
+    width: 50%;
 
 }
 .span{
     margin-top:13px;
-    width:min(10.5vw,165px) !important;
     display:flex;
 }
 input[name="delPkg"],input[name="delOut"]{
     height:30px;
-    width:min(65px,5vw) !important;
 }
 .li{
-    width:min(15.5vw,232px);
     margin-bottom:5px;
     list-style-type: none;
 
@@ -97,48 +87,41 @@ input[name="delPkg"],input[name="delOut"]{
     display:flex;
     float:right;
 }
+.del-right input {
+    max-width: 65px;
+}
 .down{
     display:flex;
     position:relative;
     margin-top:40px;
 }
-.down input{
-    width:min(15.5vw,232px) !important;
-}
+
 
 .down input[name="del_outs"]{
     margin-left:2px;
 }
 #block-body{
-    padding-right:2vh;
     display:flex;
-    margin-left:min(3vw,30px);
     text-align:center;
 }
 .panel{
     display:flex;
-    padding-top:200px;
-    padding:10px;
-    margin-left:-10px;
+    padding:5px 0;
     flex-direction: column;
 }
 .text{
-    width:min(40vw,602px);
     display:flex;
     justify-content: space-between;
 }
-input{
-    width:min(19.9vw,298px);
-}
+
 
 input[type="submit"]{
-    width:min(40vw,602px);
-
-    float:center;
     margin-top:10px;
     cursor:pointer;
 }
-
+input[type="text"]{
+    width: 48%;
+}
 footer{
     box-shadow: 0 0 15px rgba(0,0,0,0.6);
     text-align:center;
@@ -151,5 +134,11 @@ footer{
     position: fixed;
     left: 0;
     bottom: 0;
-    width: 100%;
+}
+
+@media (max-width: 991px){
+    #page-layout{
+        flex-direction: column;
+    }
+
 }
