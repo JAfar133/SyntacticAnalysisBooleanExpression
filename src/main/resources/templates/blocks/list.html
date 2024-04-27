@@ -13,13 +13,12 @@
                             </div>
                         </div>
                     </li>
-                    <div class="down">
-                        <input th:if="${pkgList!=null and pkgList.size()>1}"type="submit" name="del_pkgs" value="Удалить все посылки">
-                    </div>
                 </div>
-
+	            
             </ul>
-
+	        <div class="down">
+		        <input th:if="${pkgList!=null and pkgList.size()>1}" type="submit" name="del_pkgs" value="Удалить все посылки">
+	        </div>
         </div>
 
         <div id="out">
@@ -35,13 +34,12 @@
                             </div>
                         </div>
                     </li>
-                    <div class="down">
-                        <input th:if="${outList!=null and outList.size()>1}"type="submit" name="del_outs" value="Удалить все выводы">
-                    </div>
                 </div>
 
             </ul>
-
+	        <div class="down">
+		        <input th:if="${outList!=null and outList.size()>1}"type="submit" name="del_outs" value="Удалить все выводы">
+	        </div>
         </div>
 
     </form>

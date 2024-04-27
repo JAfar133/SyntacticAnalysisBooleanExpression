@@ -45,6 +45,29 @@ public class UserService {
         }
         else return false;
     }
+    public void addOuts(List<String> outs) {
+        for (String out: outs) {
+            if(lexAnalyzer.lexAnalyze(out)!=null) {
+                StringBuilder new_out = new StringBuilder();
+                for (Lexeme lexeme : lexAnalyzer.getLexemes()) {
+                    new_out.append(lexeme.getValue());
+                }
+                repo.addOut(new_out.toString());
+            }
+        }
+    }
+
+    public void addPkgs(List<String> pkgs) {
+        for (String pkg: pkgs) {
+            if(lexAnalyzer.lexAnalyze(pkg)!=null) {
+                StringBuilder new_pkg = new StringBuilder();
+                for (Lexeme lexeme : lexAnalyzer.getLexemes()) {
+                    new_pkg.append(lexeme.getValue());
+                }
+                repo.addPkg(new_pkg.toString());
+            }
+        }
+    }
     public boolean delPackage(String pkg){
         return repo.delPkg(pkg);
     }

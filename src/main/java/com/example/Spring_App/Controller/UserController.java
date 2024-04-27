@@ -44,6 +44,16 @@ public class UserController {
 
         return "main";
     }
+
+    @GetMapping("/example")
+    public String example() {
+        List<String> pkgs = List.of("A->B", "B->C", "C->D", "E->!D");
+        List<String> outs = List.of("A->!E", "A*E");
+        userService.addPkgs(pkgs);
+        userService.addOuts(outs);
+        return "redirect:/";
+    }
+
     @GetMapping("/get")
     public String main(
             @RequestParam String packge,
