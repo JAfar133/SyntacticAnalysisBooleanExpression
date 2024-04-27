@@ -68,7 +68,6 @@ public class UserController {
         if(delOut!=null){
             delete = delOut.split("Удалить")[1].trim();
             userService.delOut(delete);
-            System.out.println(delete);
         }
         else if(delPkg!=null){
             delete = delPkg.split("Удалить")[1].trim();
