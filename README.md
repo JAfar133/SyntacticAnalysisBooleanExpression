@@ -10,4 +10,7 @@ Syntactic analysis by recursive descent
 - javascript
 - html/css
 
-![image](https://user-images.githubusercontent.com/44347128/221913206-cd17546e-668e-4531-8fd4-973def7dcf59.png)
+https://truth-table.ru/
+
+![image](https://github.com/JAfar133/SyntacticAnalysisBooleanExpression/assets/44347128/dcc48d73-aeac-476d-9890-80538e4b4335)
+
