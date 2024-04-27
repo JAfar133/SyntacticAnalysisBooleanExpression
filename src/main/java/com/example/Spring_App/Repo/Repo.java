@@ -1,8 +1,15 @@
 package com.example.Spring_App.Repo;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.WebApplicationContext;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
+@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class Repo {
     List<String> packages;
     List<String> outs;
@@ -10,7 +17,6 @@ public class Repo {
     public Repo() {
         packages = new ArrayList<>();
         outs = new ArrayList<>();
-
     }
 
     public Repo(List<String> packages, List<String> outs) {

@@ -5,6 +5,7 @@ import com.example.Spring_App.Service.lexemeService.LexAnalyzer;
 import com.example.Spring_App.Service.lexemeService.Lexeme;
 import com.example.Spring_App.Service.lexemeService.LexemeBuffer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -12,10 +13,17 @@ import java.util.*;
 @Service
 public class UserService {
 
-    Repo repo = new Repo();
-    @Autowired
-    LexAnalyzer lexAnalyzer;
+    private final LexAnalyzer lexAnalyzer;
+
+    private final Repo repo;
+
     List<Integer> notValidRows;
+
+    @Autowired
+    public UserService(LexAnalyzer lexAnalyzer, @Qualifier("repo") Repo repo) {
+        this.lexAnalyzer = lexAnalyzer;
+        this.repo = repo;
+    }
 
     public boolean addPackage(String pkg){
         if(lexAnalyzer.lexAnalyze(pkg)!=null) {
@@ -218,11 +226,11 @@ public class UserService {
         }
         else {
             int num = notValidOuts.size();
-            result.append(num>1?"Выводы: ":"Вывод: ");
+            result.append(num>1?"Выводы ":"Вывод ");
             int n = 0;
             for (Map.Entry<String,String> pair: notValidOuts.entrySet()){
                 n++;
-                result.append(pair.getKey()).append("= ").append(pair.getValue());
+                result.append("<font color=\"#F0823D\">"+pair.getKey()+"</font>").append("= ").append(pair.getValue());
                 if(n<num){
                     result.append(", ");
                 }

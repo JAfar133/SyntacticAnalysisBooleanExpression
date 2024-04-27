@@ -1,13 +1,17 @@
 <th:block th:fragment="truth_table">
     <div class="main-table" id="main-table">
         <div>
-            <table class="MyTab table table-bordered">
+	        <div style="width: 100%;background: #f6f6f6;border: 1px solid #dee2e6;padding: 5px;">
+		        <span style="width: 100%"><font color="#F0A97D" >&lt;P&gt;</font> - Коньюнкция посылок</span><br/>
+		        <span style="width: 100%">Вывод <font color="#F0823D">C<small>i</small></font> считается валидным, если не существует строки <font color="#F0A97D">&lt;P&gt;</font>&and;<font color="#F0823D">C<small>i</small></font> = Ложь </span>
+	        </div>
+            <table class="MyTab table table-bordered" th:if="${variableName!=null}">
                 <thead>
                 <input type="hidden" id = "rowsList" th:value="${notValidRows}">
-
+									
                     <tr>
                         <th style="background-color:#F4DC72;" scope="row" th:if="${variableName!=null}">#</th>
-                        <th class="variables"th:each="mapItem, state:${variableName}" th:text="${mapItem.key}"></th>
+                        <th class="variables" th:each="mapItem, state:${variableName}" th:text="${mapItem.key}"></th>
                     </tr>
                 </thead>
                 <div class="tbl-content" >
@@ -104,6 +108,9 @@
                     </script>
                 </div>
             </table>
+	        <div style="margin-top: 20px;" th:unless="${variableName!=null}">
+		        Добавьте логические выражения!
+	        </div>
         </div>
     </div>
 </th:block>

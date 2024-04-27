@@ -19,6 +19,9 @@ public class LexAnalyzer {
         while(pos < expText.length()){
             char c = expText.charAt(pos);
             switch (c){
+                case ' ':
+                    pos++;
+                    continue;
                 case '(':
                     lexemes.add(new Lexeme(LexemeType.LEFT_BRACKET,c));
                     pos++;
