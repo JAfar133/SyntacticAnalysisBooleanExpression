@@ -124,7 +124,9 @@ public class LexAnalyzer {
     }
     public Lexeme getLexemeByValue(String value){
         for (Lexeme lexeme: lexemes) {
-            if(lexeme.getValue().equals(value))return lexeme;
+            if(lexeme.getValue().equals(value)) {
+                return lexeme;
+            }
         }
         return null;
     }

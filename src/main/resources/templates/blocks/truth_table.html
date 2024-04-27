@@ -109,10 +109,11 @@
                     </script>
                 </div>
             </table>
+		        <div style="margin-top: 20px;" th:unless="${variableName!=null}">
+			        Добавьте логические выражения!
+		        </div>
 	        </div>
-	        <div style="margin-top: 20px;" th:unless="${variableName!=null}">
-		        Добавьте логические выражения!
-	        </div>
+	        
         </div>
     </div>
 </th:block>

@@ -9,13 +9,19 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserService {
 
     private final LexAnalyzer lexAnalyzer;
+    private ExecutorService executorService;
 
     private final Repo repo;
+    private final int processors = Runtime.getRuntime().availableProcessors();
 
     List<Integer> notValidRows;
 
@@ -25,29 +31,29 @@ public class UserService {
         this.repo = repo;
     }
 
-    public boolean addPackage(String pkg){
-        if(lexAnalyzer.lexAnalyze(pkg)!=null) {
+    public boolean addPackage(String pkg) {
+        if (lexAnalyzer.lexAnalyze(pkg) != null) {
             StringBuilder new_pkg = new StringBuilder();
             for (Lexeme lexeme : lexAnalyzer.getLexemes()) {
                 new_pkg.append(lexeme.getValue());
             }
             return repo.addPkg(new_pkg.toString());
-        }
-        else return false;
+        } else return false;
     }
-    public boolean addOut(String out){
-        if(lexAnalyzer.lexAnalyze(out)!=null) {
+
+    public boolean addOut(String out) {
+        if (lexAnalyzer.lexAnalyze(out) != null) {
             StringBuilder new_out = new StringBuilder();
             for (Lexeme lexeme : lexAnalyzer.getLexemes()) {
                 new_out.append(lexeme.getValue());
             }
             return repo.addOut(new_out.toString());
-        }
-        else return false;
+        } else return false;
     }
+
     public void addOuts(List<String> outs) {
-        for (String out: outs) {
-            if(lexAnalyzer.lexAnalyze(out)!=null) {
+        for (String out : outs) {
+            if (lexAnalyzer.lexAnalyze(out) != null) {
                 StringBuilder new_out = new StringBuilder();
                 for (Lexeme lexeme : lexAnalyzer.getLexemes()) {
                     new_out.append(lexeme.getValue());
@@ -58,8 +64,8 @@ public class UserService {
     }
 
     public void addPkgs(List<String> pkgs) {
-        for (String pkg: pkgs) {
-            if(lexAnalyzer.lexAnalyze(pkg)!=null) {
+        for (String pkg : pkgs) {
+            if (lexAnalyzer.lexAnalyze(pkg) != null) {
                 StringBuilder new_pkg = new StringBuilder();
                 for (Lexeme lexeme : lexAnalyzer.getLexemes()) {
                     new_pkg.append(lexeme.getValue());
@@ -68,132 +74,181 @@ public class UserService {
             }
         }
     }
-    public boolean delPackage(String pkg){
+
+    public boolean delPackage(String pkg) {
         return repo.delPkg(pkg);
     }
-    public boolean delOut(String out){
+
+    public boolean delOut(String out) {
         return repo.delOut(out);
     }
 
-    public boolean delAllPkg(){
+    public boolean delAllPkg() {
         return repo.dellAllPkg();
     }
-    public boolean delAllOut(){
+
+    public boolean delAllOut() {
         return repo.dellAllOut();
     }
 
-    public Map<String,String> getOperandsName(){
+    public Map<String, String> getOperandsName(List<String> pkgs, List<String> outs) {
         StringBuilder sb = new StringBuilder();
-        Map<String,String> operandMap = new TreeMap<>();
-        for (String pkg: repo.getPackages()) {
-            sb.append(pkg+" ");
+        Map<String, String> operandMap = new TreeMap<>();
+        for (String pkg : pkgs) {
+            sb.append(pkg).append(" ");
         }
-        for (String out: repo.getOuts()) {
-            sb.append(out+" ");
+        for (String out : outs) {
+            sb.append(out).append(" ");
         }
-        if(!sb.toString().isEmpty()) {
+        if (!sb.toString().isEmpty()) {
             lexAnalyzer.lexAnalyze(sb.toString());
             List<Character> operandList = new ArrayList<>(lexAnalyzer.getSetOfOperand());
-            for (Character op:operandList) {
-                operandMap.put(String.valueOf(op),"Operand");
+            for (Character op : operandList) {
+                operandMap.put(String.valueOf(op), "Operand");
             }
             return operandMap;
-        }
-        else return null;
+        } else return null;
     }
-    public Map<String,String> getOperandsAndVariableNames(){
-        Map<String,String> operandMap = getOperandsName();
-        Map<String,String> OperandsAndVariableNames = new LinkedHashMap<>();
-        if(operandMap!=null) {
-            OperandsAndVariableNames.putAll(operandMap);
-        }
-        else return null;
-        if(repo.getPackages()!=null){
+
+    public Map<String, String> getOperandsAndVariableNames(List<String> pkgs, List<String> outs) {
+        Map<String, String> operandMap = getOperandsName(pkgs, outs);
+        Map<String, String> OperandsAndVariableNames;
+        if (operandMap != null) {
+            OperandsAndVariableNames = new LinkedHashMap<>(operandMap);
+        } else return null;
+        if (pkgs != null) {
             int i = 1;
-            for(String pkg: repo.getPackages()){
-                OperandsAndVariableNames.put("P"+i,pkg);
-                        i++;
+            for (String pkg : pkgs) {
+                OperandsAndVariableNames.put("P" + i, pkg);
+                i++;
             }
-            OperandsAndVariableNames.put("<P>","ConP");
+            OperandsAndVariableNames.put("<P>", "ConP");
         }
-        if(repo.getOuts()!=null){
+        if (outs != null) {
             int i = 1;
-            for(String out: repo.getOuts()){
-                OperandsAndVariableNames.put("C"+i,out);
+            for (String out : outs) {
+                OperandsAndVariableNames.put("C" + i, out);
                 i++;
             }
         }
         return OperandsAndVariableNames;
     }
-    public List<List<String>> getListOfRowsOfOperandAndVariableValues(){
-        List<List<String>> tableRowsList = getListOfRowsOfOperandValues();
-        List<List<String>> tableRowsValueList;
-        List<Boolean> boolPkgs = new ArrayList<>();
-        if(tableRowsList!=null) {
-            tableRowsValueList = new ArrayList<>(tableRowsList);
-        }
-        else return null;
-        for (List<String> opValueList : tableRowsList) {
-            for (String pkg : repo.getPackages()) {
-                tableRowsValueList.get(tableRowsList.indexOf(opValueList))
-                        .add(getPkgOrOutResult(opValueList, pkg));
-                boolPkgs.add(getPkgOrOutResult(opValueList, pkg)=="1"?true:false);
-            }
-            String conP = getСonjunctionP(boolPkgs)?"1":"0";
-            tableRowsValueList.get(tableRowsList.indexOf(opValueList)).
-                    add(conP);
-            boolPkgs=new ArrayList<>();
-            for (String out : repo.getOuts()) {
-                tableRowsValueList.get(tableRowsList.indexOf(opValueList))
-                        .add(getPkgOrOutResult(opValueList, out));
-            }
-        }
-        return tableRowsList;
+    private class LexemeInfo {
+        public List<Lexeme> lexemes;
+        public Set<Character> operands;
 
+        public LexemeInfo(List<Lexeme> lexemes, Set<Character> operands) {
+            this.lexemes = lexemes;
+            this.operands = operands;
+        }
+    }
+    public List<List<String>> getListOfRowsOfOperandAndVariableValues() {
+        this.executorService = Executors.newFixedThreadPool(processors);
+
+        List<LexemeInfo> pkgsLexeme = new ArrayList<>();
+        List<LexemeInfo> outsLexeme = new ArrayList<>();
+        List<String> pkgs = repo.getPackages();
+        List<String> outs = repo.getOuts();
+
+        Map<String, String> operands = getOperandsName(pkgs, outs);
+
+        for (String pkg : pkgs) {
+            pkgsLexeme.add(new LexemeInfo(lexAnalyzer.lexAnalyze(pkg), lexAnalyzer.getSetOfOperand()));
+        }
+
+        for (String out : outs) {
+            outsLexeme.add(new LexemeInfo(lexAnalyzer.lexAnalyze(out), lexAnalyzer.getSetOfOperand()));
+        }
+
+        List<List<String>> tableRowsList = getListOfRowsOfOperandValues(operands.size());
+        List<List<String>> tableRowsValueList;
+        if (tableRowsList != null) {
+            tableRowsValueList = new ArrayList<>(tableRowsList);
+        } else return null;
+
+
+        for (List<String> opValueList : tableRowsList) {
+            int index = tableRowsList.indexOf(opValueList);
+                List<Boolean> boolPkgs = new ArrayList<>();
+                for (LexemeInfo lexemes : pkgsLexeme) {
+                    String result = getPkgOrOutResult(opValueList, lexemes, operands);
+                    tableRowsValueList.get(index).add(result); // Access synchronized list
+                    boolPkgs.add(Objects.equals(result, "1"));
+                }
+                String conP = getСonjunctionP(boolPkgs) ? "1" : "0";
+                tableRowsValueList.get(index).add(conP); // Access synchronized list
+                for (LexemeInfo lexemes : outsLexeme) {
+                    tableRowsValueList.get(index).add(getPkgOrOutResult(opValueList, lexemes, operands)); // Access synchronized list
+                }
+        }
+
+        return tableRowsValueList;
+
+//        List<List<String>> synchronizedTableRowsValueList = Collections.synchronizedList(tableRowsValueList);
+//
+//        for (List<String> opValueList : tableRowsList) {
+//            int index = tableRowsList.indexOf(opValueList);
+//            executorService.submit(() -> {
+//                List<Boolean> boolPkgs = new ArrayList<>();
+//                for (LexemeInfo lexemes : pkgsLexeme) {
+//                    String result = getPkgOrOutResult(opValueList, lexemes, operands);
+//                    synchronizedTableRowsValueList.get(index).add(result); // Access synchronized list
+//                    boolPkgs.add(Objects.equals(result, "1"));
+//                }
+//                String conP = getСonjunctionP(boolPkgs) ? "1" : "0";
+//                synchronizedTableRowsValueList.get(index).add(conP); // Access synchronized list
+//                for (LexemeInfo lexemes : outsLexeme) {
+//                    synchronizedTableRowsValueList.get(index).add(getPkgOrOutResult(opValueList, lexemes, operands)); // Access synchronized list
+//                }
+//            });
+//        }
+//
+//        executorService.shutdown();
+//        try {
+//            executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return synchronizedTableRowsValueList;
     }
 
-    public List<List<String>> getListOfRowsOfOperandValues(){
-        int n;
-        if(getOperandsName()!=null) {
-            n = getOperandsName().size();
-        }
-        else return null;
+    public List<List<String>> getListOfRowsOfOperandValues(int operandsSize) {
         List<List<String>> tableRowsList = new ArrayList<>();
-        int rows = (int) Math.pow(2,n);
-        for (int i=0; i<rows; i++) {
+        int rows = (int) Math.pow(2, operandsSize);
+        for (int i = 0; i < rows; i++) {
             List<String> row = new ArrayList<>();
-            for (int j=n-1; j>=0; j--) {
+            for (int j = operandsSize - 1; j >= 0; j--) {
                 //Заполняем список
-                int boolValue = (i/(int) Math.pow(2, j))%2;
+                int boolValue = (i / (int) Math.pow(2, j)) % 2;
                 row.add(String.valueOf(boolValue));
             }
             tableRowsList.add(row);
         }
         return tableRowsList;
     }
-    public String getPkgOrOutResult(List<String> valueList,String pkg){
-        Map<String,String> operandMap = getOperandsName();
-        //Парсим выражение в список лексем(операторы и операнды)
-        List<Lexeme> lexemes = lexAnalyzer.lexAnalyze(pkg);
+
+    public String getPkgOrOutResult(List<String> valueList, LexemeInfo lexemeInfo, Map<String, String> operandMap) {
         //Создаем буфер для лексем
-        LexemeBuffer lexemeBuffer = new LexemeBuffer(lexemes);
         //Создаем множество(уникальное) операндов
-        Set<Character> characterSet = lexAnalyzer.getSetOfOperand();
+        Set<Character> characterSet = lexemeInfo.operands;
         //Помещаем множество в список
         List<String> list = new ArrayList<>();
-        for (Character op:characterSet) {
+        for (Character op : characterSet) {
             list.add(String.valueOf(op));
         }
+        List<Lexeme> lexemeValues = new ArrayList<>();
+        for (Lexeme lexeme : lexemeInfo.lexemes) {
+            lexemeValues.add(lexeme.clone());
+        }
         //Проходимся по списку всех операндов
-        for (String operand: operandMap.keySet()) {
+        for (String operand : operandMap.keySet()) {
             //Если в списке операндов нашего выражения, содержится данный операнд
-            if(list.contains(operand)){
+            if (list.contains(operand)) {
                 //Текущий операнд
                 //Одинаковые операнды, должны принимать одинаковое булево значение
-                while(lexAnalyzer.getLexemeByValue(operand)!=null)
-                {
-                    //Получаем лексему с таким-же операндом
-                    Lexeme lexeme = lexAnalyzer.getLexemeByValue(operand);
+                Lexeme lexeme = getLexemeByValue(operand, lexemeValues);
+                if (lexeme != null) {
                     //Устанавливаем значение операнда 0 или 1
                     List<String> OperandList = new ArrayList<>(operandMap.keySet());
                     int a = OperandList.indexOf(operand);
@@ -201,70 +256,73 @@ public class UserService {
                 }
             }
         }
+        LexemeBuffer lexemeBuffer = new LexemeBuffer(lexemeValues);
         boolean pkgBool = lexAnalyzer.Expr(lexemeBuffer);
-        return pkgBool?"1":"0";
+        return pkgBool ? "1" : "0";
     }
-    public boolean getСonjunctionP(List<Boolean>pkgs){
-        boolean pkges=true;
-        for (Boolean b:pkgs) {
-            pkges = pkges&&b;
+
+    private Lexeme getLexemeByValue(String value, List<Lexeme> lexemes){
+        for (Lexeme lexeme: lexemes) {
+            if(lexeme.getValue().equals(value)) {
+                return lexeme;
+            }
+        }
+        return null;
+    }
+
+    public boolean getСonjunctionP(List<Boolean> pkgs) {
+        boolean pkges = true;
+        for (Boolean b : pkgs) {
+            pkges = pkges && b;
         }
         return pkges;
     }
-    public boolean isValid(boolean conP, boolean out){
-        if(conP&!out){
+
+    public boolean isValid(boolean conP, boolean out) {
+        if (conP & !out) {
             return false;
-        }
-        else return true;
+        } else return true;
     }
-    public String getResult(){
-        List<List<String>> rowsOfOperands = getListOfRowsOfOperandAndVariableValues();
-        Map<String,String> OperandsAndVariableNames;
-        if(rowsOfOperands!=null){
-            OperandsAndVariableNames = getOperandsAndVariableNames();
-        }
-        else return null;
-        Map<String,String> notValidOuts = new LinkedHashMap<>();
+
+    public String getResult(Map<String, String> OperandsAndVariableNames, List<List<String>> rowsOfOperands) {
+        Map<String, String> notValidOuts = new LinkedHashMap<>();
         List<String> outs = repo.getOuts();
         notValidRows = new ArrayList<>();
         List<String> OperandAndVariableNameList = new ArrayList<>(OperandsAndVariableNames.keySet());
         int i = 1;
-        for(String out: outs) {
+        for (String out : outs) {
             for (List<String> row : rowsOfOperands) {
                 int numberColumnP = OperandAndVariableNameList.indexOf("<P>");
                 String pValue = row.get(numberColumnP);
-                int numberColumnOut = OperandAndVariableNameList.indexOf("C"+i);
+                int numberColumnOut = OperandAndVariableNameList.indexOf("C" + i);
                 String outValue = row.get(numberColumnOut);
-                if(!isValid(pValue.equals("1")?true:false,outValue.equals("1")?true:false))
-                {
+                if (!isValid(pValue.equals("1") ? true : false, outValue.equals("1") ? true : false)) {
                     notValidRows.add(rowsOfOperands.indexOf(row));
-                    notValidOuts.put("C"+i,out);
+                    notValidOuts.put("C" + i, out);
                 }
             }
             i++;
         }
         StringBuilder result = new StringBuilder();
-        if(notValidOuts.isEmpty()){
+        if (notValidOuts.isEmpty()) {
             return "Все выводы валидные";
-        }
-        else {
+        } else {
             int num = notValidOuts.size();
-            result.append(num>1?"Выводы ":"Вывод ");
+            result.append(num > 1 ? "Выводы " : "Вывод ");
             int n = 0;
-            for (Map.Entry<String,String> pair: notValidOuts.entrySet()){
+            for (Map.Entry<String, String> pair : notValidOuts.entrySet()) {
                 n++;
-                result.append("<font color=\"#F0823D\">"+pair.getKey()+"</font>").append("= ").append(pair.getValue());
-                if(n<num){
+                result.append("<font color=\"#F0823D\">" + pair.getKey() + "</font>").append("= ").append(pair.getValue());
+                if (n < num) {
                     result.append(", ");
-                }
-                else result.append(" ");
+                } else result.append(" ");
             }
-            result.append(num>1?"не валидные":"не валидный");
+            result.append(num > 1 ? "не валидные" : "не валидный");
         }
         return result.toString();
     }
-    public int getPosP(){
-        Map<String,String> OperandsAndVariableNames = getOperandsAndVariableNames();
+
+    public int getPosP(Map<String, String> OperandsAndVariableNames) {
         List<String> keyList = new ArrayList<>(OperandsAndVariableNames.keySet());
         return keyList.indexOf("<P>");
     }

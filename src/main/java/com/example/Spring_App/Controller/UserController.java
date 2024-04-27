@@ -21,27 +21,29 @@ public class UserController {
 
     @GetMapping()
     public String main(Model model) {
-        model.addAttribute("pkgList",userService.getRepo().getPackages());
-        model.addAttribute("outList",userService.getRepo().getOuts());
+        List<String> pkgs = userService.getRepo().getPackages();
+        List<String> outs = userService.getRepo().getOuts();
+        model.addAttribute("pkgList", pkgs);
+        model.addAttribute("outList", outs);
         List<List<String>> variableValue;
         Map<String,String> variableName;
         try{
+            variableName = userService.getOperandsAndVariableNames(pkgs, outs);
             variableValue = userService.getListOfRowsOfOperandAndVariableValues();
-            variableName = userService.getOperandsAndVariableNames();
             model.addAttribute("variableName",variableName);
             model.addAttribute("variableValue",variableValue);
-            model.addAttribute("posP",userService.getPosP());
+            model.addAttribute("posP",userService.getPosP(variableName));
+            String result = userService.getResult(variableName, variableValue);
+            if(result!=null&&userService.getRepo().getOuts()!=null&&!userService.getRepo().getOuts().isEmpty()){
+                model.addAttribute("result",result);
+                if(userService.getNotValidRows()!=null&&!userService.getNotValidRows().isEmpty()){
+                    model.addAttribute("notValidRows",userService.getNotValidRows());
+                }
+            }
         }catch (RuntimeException e){
+            e.printStackTrace();
             return "main";
         }
-        String result = userService.getResult();
-        if(result!=null&&userService.getRepo().getOuts()!=null&&!userService.getRepo().getOuts().isEmpty()){
-            model.addAttribute("result",result);
-            if(userService.getNotValidRows()!=null&&!userService.getNotValidRows().isEmpty()){
-                model.addAttribute("notValidRows",userService.getNotValidRows());
-            }
-        }
-
         return "main";
     }
 

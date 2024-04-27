@@ -1,6 +1,6 @@
 package com.example.Spring_App.Service.lexemeService;
 
-public class Lexeme {
+public class Lexeme implements Cloneable {
     private LexemeType type;
     private String value;
 
@@ -11,6 +11,11 @@ public class Lexeme {
     public Lexeme(LexemeType type, Character value) {
         this.type = type;
         this.value = value.toString();
+    }
+
+    public Lexeme(Lexeme lexeme) {
+        this.type = lexeme.getType();
+        this.value = lexeme.getValue();
     }
 
     public LexemeType getType() {
@@ -27,5 +32,15 @@ public class Lexeme {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    @Override
+    public Lexeme clone() {
+        try {
+            Lexeme clone = (Lexeme) super.clone();
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }
