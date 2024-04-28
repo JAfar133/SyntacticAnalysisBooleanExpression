@@ -1,9 +1,10 @@
 <th:block th:fragment="truth_table">
     <div class="main-table" id="main-table">
         <div style="height: 100%">
-	        <div style="width: 100%;background: #f6f6f6;border: 1px solid #dee2e6;padding: 5px;">
+	        <div style="cursor:help;width: 100%;background: #f6f6f6;border: 1px solid #dee2e6;padding: 5px;">
 		        <span style="width: 100%"><font color="#F0A97D" >&lt;P&gt;</font> - Коньюнкция посылок</span><br/>
 		        <span style="width: 100%">Вывод <font color="#F0823D">C<small>i</small></font> считается валидным, если не существует строки <font color="#F0A97D">&lt;P&gt;</font>&and;<font color="#F0823D">C<small>i</small></font> = Ложь </span>
+		        <br><span>В таблице подсвечиваются строки, в которых нарушается валидность вывода</span>
 	        </div>
 	        <div style="overflow: auto; height: 100%">
             <table class="MyTab table table-bordered" th:if="${variableName!=null}">
@@ -83,7 +84,6 @@
                                             value.forEach((td)=>{
                                                 var color = td.style.backgroundColor.split(",");
                                                 var newColor="";
-                                                console.log(color);
                                                 if(color!=null){
                                                     if(color==''){
                                                         td.style.background="#EAEAEA";

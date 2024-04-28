@@ -149,7 +149,9 @@ public class UserService {
         List<String> outs = repo.getOuts();
 
         Map<String, String> operands = getOperandsName(pkgs, outs);
-
+        if (operands == null) {
+            return null;
+        }
         for (String pkg : pkgs) {
             pkgsLexeme.add(new LexemeInfo(lexAnalyzer.lexAnalyze(pkg), lexAnalyzer.getSetOfOperand()));
         }

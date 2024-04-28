@@ -3,6 +3,7 @@
     margin-bottom:50px;
     height:min(70vh,700px);
     width:100%;
+    max-width: 600px;
 }
 thead{
 }
@@ -18,4 +19,11 @@ td {
 }
 tr{
     background-color:#f6f6f6;
+}
+.count {
+    cursor: crosshair;
+}
+summary {
+    background: #f6f6f6;
+    padding: 3px;
 }

@@ -41,7 +41,6 @@ public class UserController {
                 }
             }
         }catch (RuntimeException e){
-            e.printStackTrace();
             return "main";
         }
         return "main";
@@ -49,6 +48,8 @@ public class UserController {
 
     @GetMapping("/example")
     public String example() {
+        userService.delAllOut();
+        userService.delAllPkg();
         List<String> pkgs = List.of("A->B", "B->C", "C->D", "E->!D");
         List<String> outs = List.of("A->!E", "A*E");
         userService.addPkgs(pkgs);
