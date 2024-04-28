@@ -4,15 +4,13 @@ import com.example.Spring_App.Repo.Repo;
 import com.example.Spring_App.Service.lexemeService.LexAnalyzer;
 import com.example.Spring_App.Service.lexemeService.Lexeme;
 import com.example.Spring_App.Service.lexemeService.LexemeBuffer;
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 @Service
 public class UserService {
@@ -161,57 +159,49 @@ public class UserService {
         }
 
         List<List<String>> tableRowsList = getListOfRowsOfOperandValues(operands.size());
-        List<List<String>> tableRowsValueList;
-        if (tableRowsList != null) {
-            tableRowsValueList = new ArrayList<>(tableRowsList);
-        } else return null;
+        List<List<String>> tableRowsValueList = Collections.synchronizedList(new ArrayList<>(tableRowsList.size()));
 
+        List<List<List<String>>> partitions = Lists.partition(tableRowsList, processors);
 
-        for (List<String> opValueList : tableRowsList) {
-            int index = tableRowsList.indexOf(opValueList);
-                List<Boolean> boolPkgs = new ArrayList<>();
-                for (LexemeInfo lexemes : pkgsLexeme) {
-                    String result = getPkgOrOutResult(opValueList, lexemes, operands);
-                    tableRowsValueList.get(index).add(result); // Access synchronized list
-                    boolPkgs.add(Objects.equals(result, "1"));
+        List<Future<List<List<String>>>> futures = new ArrayList<>();
+
+        for (List<List<String>> partition : partitions) {
+            Future<List<List<String>>> future = executorService.submit(() -> {
+                List<List<String>> resultPartition = new ArrayList<>();
+                for (List<String> opValueList : partition) {
+                    List<String> row = new ArrayList<>(opValueList);
+                    List<Boolean> boolPkgs = new ArrayList<>();
+                    for (LexemeInfo lexemes : pkgsLexeme) {
+                        String result = getPkgOrOutResult(opValueList, lexemes, operands);
+                        boolPkgs.add(Objects.equals(result, "1"));
+                        row.add(result);
+                    }
+                    String conP = getСonjunctionP(boolPkgs) ? "1" : "0";
+                    row.add(conP);
+                    for (LexemeInfo lexemes : outsLexeme) {
+                        row.add(getPkgOrOutResult(opValueList, lexemes, operands));
+                    }
+                    resultPartition.add(row);
                 }
-                String conP = getСonjunctionP(boolPkgs) ? "1" : "0";
-                tableRowsValueList.get(index).add(conP); // Access synchronized list
-                for (LexemeInfo lexemes : outsLexeme) {
-                    tableRowsValueList.get(index).add(getPkgOrOutResult(opValueList, lexemes, operands)); // Access synchronized list
-                }
+                return resultPartition;
+            });
+            futures.add(future);
         }
 
-        return tableRowsValueList;
+        for (Future<List<List<String>>> future : futures) {
+            try {
+                List<List<String>> resultPartition = future.get();
+                tableRowsValueList.addAll(resultPartition);
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
 
-//        List<List<String>> synchronizedTableRowsValueList = Collections.synchronizedList(tableRowsValueList);
-//
-//        for (List<String> opValueList : tableRowsList) {
-//            int index = tableRowsList.indexOf(opValueList);
-//            executorService.submit(() -> {
-//                List<Boolean> boolPkgs = new ArrayList<>();
-//                for (LexemeInfo lexemes : pkgsLexeme) {
-//                    String result = getPkgOrOutResult(opValueList, lexemes, operands);
-//                    synchronizedTableRowsValueList.get(index).add(result); // Access synchronized list
-//                    boolPkgs.add(Objects.equals(result, "1"));
-//                }
-//                String conP = getСonjunctionP(boolPkgs) ? "1" : "0";
-//                synchronizedTableRowsValueList.get(index).add(conP); // Access synchronized list
-//                for (LexemeInfo lexemes : outsLexeme) {
-//                    synchronizedTableRowsValueList.get(index).add(getPkgOrOutResult(opValueList, lexemes, operands)); // Access synchronized list
-//                }
-//            });
-//        }
-//
-//        executorService.shutdown();
-//        try {
-//            executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return synchronizedTableRowsValueList;
+        executorService.shutdown();
+        return tableRowsValueList;
     }
+
+
 
     public List<List<String>> getListOfRowsOfOperandValues(int operandsSize) {
         List<List<String>> tableRowsList = new ArrayList<>();
