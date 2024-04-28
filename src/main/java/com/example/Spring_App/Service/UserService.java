@@ -237,14 +237,10 @@ public class UserService {
         for (String operand : operandMap.keySet()) {
             //Если в списке операндов нашего выражения, содержится данный операнд
             if (list.contains(operand)) {
-                //Текущий операнд
-                //Одинаковые операнды, должны принимать одинаковое булево значение
-                Lexeme lexeme = getLexemeByValue(operand, lexemeValues);
-                if (lexeme != null) {
-                    //Устанавливаем значение операнда 0 или 1
-                    List<String> OperandList = new ArrayList<>(operandMap.keySet());
-                    int a = OperandList.indexOf(operand);
-                    lexeme.setValue(valueList.get(a));
+                List<String> OperandList = new ArrayList<>(operandMap.keySet());
+                List<Lexeme> matchingLexemes = getLexemesByValue(operand, lexemeValues);
+                for (Lexeme lexeme : matchingLexemes) {
+                    lexeme.setValue(valueList.get(OperandList.indexOf(operand)));
                 }
             }
         }
@@ -260,6 +256,16 @@ public class UserService {
             }
         }
         return null;
+    }
+
+    private List<Lexeme> getLexemesByValue(String value, List<Lexeme> lexemes) {
+        List<Lexeme> matchingLexemes = new ArrayList<>();
+        for (Lexeme lexeme : lexemes) {
+            if (lexeme.getValue().equals(value)) {
+                matchingLexemes.add(lexeme);
+            }
+        }
+        return matchingLexemes;
     }
 
     public boolean getСonjunctionP(List<Boolean> pkgs) {
